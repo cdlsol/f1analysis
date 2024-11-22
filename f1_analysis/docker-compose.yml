@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=olympics24db
+    networks:
+      - pg-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"  # PostgreSQL will be available on localhost:5433
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    networks:
+      - pg-network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "8080:80"  # pgAdmin will be available on localhost:8080
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - pgdatabase
+    ports:
+      - "35603:35603"  # Your app will be available on localhost:35603
+    networks:
+      - pg-network
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  pgadmin_data:
+
+networks:
+  pg-network:
+    driver: bridge
