@@ -8,7 +8,8 @@ load_dotenv()  # Load the variables from the .env file
 dataset_name = 'rohanrao/formula-1-world-championship-1950-2020'
 
 #Target directory to save the data
-data_dir = '/home/carlos/f1/f1_analysis/f1_analysis/data' #map and change to container data dir in the future
+# data_dir = '/home/carlos/f1/f1_analysis/f1_analysis/data' #map and change to container data dir in the future
+data_dir = '/app/data'
 
 #Check if directory exists (create it if it doesn't)
 os.makedirs(data_dir, exist_ok=True)
