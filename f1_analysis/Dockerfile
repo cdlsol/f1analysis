@@ -1,22 +1,20 @@
 #Python runtime 
 FROM python:3.12-slim
 
-# Set the working directory inside the container
+#Set the working directory inside the container
 WORKDIR /app
 
-# Install system dependencies required for your app
+# nstall system dependencies required for your app
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-#Install Poetry, can be changed to run pip install?
-RUN curl -sSL https://install.python-poetry.org | python3 - 
+#Install Poetry using pip 
+RUN pip install poetry
 
-#Add Poetry to PATH
-ENV PATH="/root/.local/bin:$PATH"
-
-#Copy the Poetry lock file and pyproject.toml
-COPY pyproject.toml poetry.lock* /app/
+# Copy the Poetry lock file and pyproject.toml
+COPY pyproject.toml poetry.lock /app/
 
 # Install the Python dependencies using Poetry
 RUN poetry install --no-dev --no-interaction
@@ -24,8 +22,9 @@ RUN poetry install --no-dev --no-interaction
 # Copy the rest of the application code
 COPY . /app/
 
-# Expose the app port
+# Expose the app's ports
 EXPOSE 8000
+EXPOSE 35603
 
 # Command to run the application, change to bash?
 CMD ["poetry", "run", "python", "app.py"]

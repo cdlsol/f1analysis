@@ -6,13 +6,13 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=olympics24db
+      - POSTGRES_DB=f1db 
     networks:
       - pg-network
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5433:5432"  # PostgreSQL will be available on localhost:5433
+      - "5433:5432"  
     restart: unless-stopped
 
   pgadmin:
@@ -25,17 +25,19 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     ports:
-      - "8080:80"  # pgAdmin will be available on localhost:8080
+      - "8080:80"  
     restart: unless-stopped
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - /home/carlos/f1/f1_analysis/f1_analysis/data:/app/data #Map cdlsol host directory to container directory
     depends_on:
       - pgdatabase
     ports:
-      - "35603:35603"  # Your app will be available on localhost:35603
+      - "35603:35603"  
     networks:
       - pg-network
     restart: unless-stopped
